@@ -1,6 +1,6 @@
 import string, random
 import json, sys
-from subprocess import call
+import subprocess
 import os, logging
 
 num_puzzle = int(sys.argv[1])
@@ -44,8 +44,6 @@ def get_diagonals(grid, bltr=True):
     return return_grid
 
 
-
-
 def load_words():
     with open("Themed_Vocab.json") as f:
         return json.load(f)
@@ -53,7 +51,10 @@ def load_words():
 
 def print_file(filename):
     abs_path = f'"{os.path.abspath(filename)}"'
-    call(f"notepad /p {abs_path}",shell=True)
+    if os.name == "nt":
+        subprocess.call(f"notepad /p {abs_path}",shell=True)
+    else:
+        subprocess.call(f"lpr << $(cat {filename})", shell=True)
 
 
 def make_word_search(outFile, text):
